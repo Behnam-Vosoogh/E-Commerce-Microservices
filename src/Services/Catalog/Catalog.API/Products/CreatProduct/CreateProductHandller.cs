@@ -1,8 +1,5 @@
-﻿
-using System.Windows.Input;
-using BuikdingBlocks.CQRS;
+﻿using BuikdingBlocks.CQRS;
 using Catalog.API.Models;
-using MediatR;
 
 namespace Catalog.API.Products.CreatProduct
 {
