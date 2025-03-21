@@ -1,11 +1,8 @@
-﻿using BuikdingBlocks.CQRS;
-using Catalog.API.Models;
-
-namespace Catalog.API.Products.CreatProduct
+﻿namespace Catalog.API.Products.CreatProduct
 {
-    public record CreateProductCommand(string Name, List<string> Category, string Description,string ImageFile,decimal Price) : ICommand<CreateProductResult>;
+    public record CreateProductCommand(string Name, List<string> Category, string Description, string ImageFile, decimal Price) : ICommand<CreateProductResult>;
     public record CreateProductResult(Guid Id);
-    internal class CreateProductCommandHandller : ICommandHandler<CreateProductCommand, CreateProductResult>
+    internal class CreateProductCommandHandller(IDocumentSession session) : ICommandHandler<CreateProductCommand, CreateProductResult>
     {
         public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
@@ -19,13 +16,16 @@ namespace Catalog.API.Products.CreatProduct
                 ImageFile = command.ImageFile,
                 Price = command.Price
             };
-            // TODO 
+            //TODO 
             //save product to database
+            session.Store(product);
+            await session.SaveChangesAsync(cancellationToken);
 
 
             //return creatProductResult
 
-            return new CreateProductResult(Guid.NewGuid());
+
+            return new CreateProductResult(product.Id);
         }
     }
 }
